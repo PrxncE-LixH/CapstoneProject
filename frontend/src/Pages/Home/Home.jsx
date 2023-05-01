@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Card from "../../Components/Card";
 import useSWR from "swr";
+
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 function Home() {
   const url = "https://randomuser.me/api/?results=10";
   const { data, error } = useSWR(url, fetcher);
+  const [text, setText] = useState('')
 
   if(data){
-    console.log(data.results)
+   
   }else{
     console.log(error)
   }
@@ -24,7 +26,8 @@ function Home() {
       {
           data ? (
             <div>
-
+              <input type="text" />
+              {/* <span dangerouslySetInnerHTML={{__html:text}}></span> */}
              {data.results.map(element=>{
               return(
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../../App.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +18,10 @@ function Login() {
       });
 
       if (newUser.status === 200) {
-        console.log("success");
+        Cookies.set("token", newUser.data.token);
+        Cookies.set("name", "value");
+        console.log(newUser.data.token);
+        console.log(Cookies.get("token"));
         navigate("/home");
       }
     } catch (error) {
