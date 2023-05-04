@@ -1,28 +1,37 @@
 import React, { useState } from "react";
 import "../../App.css";
-import axios from 'axios'
-import {useNavigate} from 'react-router-dom'
+import { formValidation } from "../../script";
+import { useNavigate } from "react-router-dom";
+
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
+    let formData = {
+      email: e.target[0].value,
+      password: e.target[1].value,
+    };
 
-      const newUser = await axios.post('http://localhost:3000/signup', {
-        email, password
-      })
+    const isValid = await formValidation.isValid(formData);
 
-      if(newUser.status ===201){
-        console.log('success')
-        navigate('/home')
+    if (isValid) {
+      try {
+        const newUser = await axios.post("http://localhost:3000/signup", {
+          email,
+          password,
+        });
+
+        if (newUser.status === 201) {
+          console.log("success");
+          navigate("/home");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) 
-    {
-      console.log(error)
     }
   };
 
@@ -40,7 +49,6 @@ function Signup() {
           onChange={(e) => {
             setEmail(e.target.value);
           }}
-          required
         />
 
         <label for="password">Password:</label>
@@ -53,12 +61,10 @@ function Signup() {
           onChange={(e) => {
             setPassword(e.target.value);
           }}
-          required
         />
 
         <input type="submit" id="Signup" value="Signup" />
       </form>
-  
     </div>
   );
 }
