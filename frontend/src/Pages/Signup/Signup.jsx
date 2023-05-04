@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../../App.css";
 import { formValidation } from "../../script";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 function Signup() {
   const [email, setEmail] = useState("");
