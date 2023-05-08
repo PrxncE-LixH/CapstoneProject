@@ -15,7 +15,6 @@ export default function setupJWTStrategy(passport) {
           return done(null, {
             id: payload.id,
             email: payload.email,
-            password: payload.password,
           });
         } catch (error) {
           return done(error, null);
