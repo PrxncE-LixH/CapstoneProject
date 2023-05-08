@@ -3,10 +3,13 @@ import "../../App.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken } from "../../redux/userSlice";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,9 +22,9 @@ function Login() {
 
       if (newUser.status === 200) {
         Cookies.set("token", newUser.data.token);
-        Cookies.set("name", "value");
-        console.log(newUser.data.token);
-        console.log(Cookies.get("token"));
+        dispatch(setToken({ token: newUser.data?.token }));
+        const value = useSelector((state) => state.user.token);
+        console.log(value);
         navigate("/home");
       }
     } catch (error) {
