@@ -1,48 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../../Components/Card";
 import useSWR from "swr";
-
+import { useSelector } from "react-redux";
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 function Home() {
-  const url = "https://randomuser.me/api/?results=10";
-  const { data, error } = useSWR(url, fetcher);
-  const [text, setText] = useState('')
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState("");
+  const value = useSelector((state) => state.user.token);
+  const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${query}`;
+  const { data, error, isLoading } = useSWR(url, fetcher);
 
-  if(data){
-   
-  }else{
-    console.log(error)
+  async function getData() {
+    const data = await axios.get(url);
+
+    if (data) {
+      setResult(data.data);
+    }
   }
 
+  // useEffect(()=>
 
-  // ...
+  const handleSumbit = (e) => {
+    e.preventDefault();
+    getData();
+    console.log(value)
+  };
 
   return (
-    <div>
-      home
-    
-      {
-          data ? (
-            <div>
-              <input type="text" />
-              {/* <span dangerouslySetInnerHTML={{__html:text}}></span> */}
-             {data.results.map(element=>{
-              return(
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <Card imageUrl={element.picture.large}
-                email={element.email} 
-                 name={`${element.name.title} ${element.name.first} ${element.name.last }`} 
-                 />
-                </div>
-              )
-             })}
-            </div>
-          ) :(<div>
-            <h1>welocome</h1>
-            </div>)
-        }
+    <div className="h-screen w-screen bg-pink-400">
+      <form className="pt-4 w-full flex px-20" onSubmit={handleSumbit}>
+        <input
+          type="text"
+          placeholder="Search defination of a Word"
+          className="w-full rounded-full px-6"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="submit" className="border p-3  text-black bg-pink-100">
+          Enter
+        </button>
+      </form>
+      <div className="h-full w-full">
+        {result && (
+          <div className="shadow p-5 mx-20 bg-pink-50 rounded-lg mt-20">
+            <p className="text-lg">{result[0].word}</p>
+            <p className="pl-5">
+              {result[0].meanings[0].definitions[0].definition}
+            </p>
+          </div>
+        )}
+      </div>
+      <div dangerouslySetInnerHTML={{ __html: query }} />
     </div>
   );
 }

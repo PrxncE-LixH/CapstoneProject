@@ -145,7 +145,40 @@ router.get(
   }
 );
 
+router.put('/auth',passport.authenticate('jwt', {
+  session:false,
+}), async(req,res)=>{
 
+
+  try {
+      const updatedUser = await prisma.user.update({
+        where: {
+          id:req.user.id
+        },
+        data:{
+          ...req.body
+        }
+      })
+      if (updatedUser) {
+        res.status(200).json({
+          success: true,
+          data: updatedUser,
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: "user not found",
+        });
+      }
+      
+  } catch (error) {
+    console.log("first", error)
+    res.status(500).json({
+      success: false,
+      message: "something went wrong",
+    });
+  }
+})
 
 
 

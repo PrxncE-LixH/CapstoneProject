@@ -13,7 +13,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+   
     try {
       const newUser = await axios.post("http://localhost:3000/login", {
         email,
@@ -23,8 +23,8 @@ function Login() {
       if (newUser.status === 200) {
         Cookies.set("token", newUser.data.token);
         dispatch(setToken({ token: newUser.data?.token }));
-        const value = useSelector((state) => state.user.token);
-        console.log(value);
+       
+        
         navigate("/home");
       }
     } catch (error) {
