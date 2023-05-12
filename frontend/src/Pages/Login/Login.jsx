@@ -21,11 +21,11 @@ function Login() {
       });
 
       if (newUser.status === 200) {
-        Cookies.set("token", newUser.data.token);
+        
         dispatch(setToken({ token: newUser.data?.token }));
        
         
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
